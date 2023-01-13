@@ -1,10 +1,9 @@
 # Release Notes
-Another day, another release. These are the release notes for the version `v1.5.0`.
+Another day, another release. These are the release notes for the version `v1.5.2`.
 
-## Features
-* feat(RAIN-45215): Add Hidden Azure & GCP suppressions list commands (#1100) (Ross)([796bd92c](https://github.com/lacework/go-sdk/commit/796bd92c4f870d8fb002df5f5aec9c0d8107541d))
 ## Other Changes
-* ci: version bump to v1.4.2-dev (Lacework)([8ecf94b3](https://github.com/lacework/go-sdk/commit/8ecf94b30bade1e0d0670809576246283255751f))
+* chore: re-add compliance enable/disable commands (#1106) (Ross)([f25c72c9](https://github.com/lacework/go-sdk/commit/f25c72c9902bbdcdb22ccf98d28f9e39c57c9dc5))
+* ci: version bump to v1.5.2-dev (Lacework)([9571b913](https://github.com/lacework/go-sdk/commit/9571b91369161598dcb88e8dad22835ea723976e))
 
 ## :whale: [Docker Image](https://hub.docker.com/r/lacework/lacework-cli)
 ```
