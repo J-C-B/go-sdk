@@ -20,7 +20,6 @@
 package integration
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -34,10 +33,7 @@ import (
 func TestCreateTeamMember(t *testing.T) {
 	os.Setenv("LW_NOCACHE", "true")
 	defer os.Setenv("LW_NOCACHE", "")
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	tmResult, err := runTeamMembersTest(t,
@@ -64,10 +60,7 @@ func TestCreateTeamMember(t *testing.T) {
 func TestTeamMemberValidateEmail(t *testing.T) {
 	os.Setenv("LW_NOCACHE", "true")
 	defer os.Setenv("LW_NOCACHE", "")
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	tmResult, err := runTeamMembersTest(t,

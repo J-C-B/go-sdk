@@ -21,7 +21,6 @@ package integration
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"testing"
@@ -359,7 +358,7 @@ func TestConfigureCommandWithExistingConfigAndMultiProfile(t *testing.T) {
 
 	// assert.Contains(t, state, "You are all set!", "you are not all set, check configure cmd")
 	assert.FileExists(t, configPath, "the configuration file is missing")
-	laceworkTOML, err := ioutil.ReadFile(configPath)
+	laceworkTOML, err := os.ReadFile(configPath)
 	assert.Nil(t, err)
 
 	assert.Equal(t, `[default]
@@ -414,7 +413,7 @@ func TestConfigureCommandWithExistingConfigAndMultiProfile(t *testing.T) {
 
 		// assert.Contains(t, state, "You are all set!", "you are not all set, check configure cmd")
 		assert.FileExists(t, configPath, "the configuration file is missing")
-		laceworkTOML, err := ioutil.ReadFile(configPath)
+		laceworkTOML, err := os.ReadFile(configPath)
 		assert.Nil(t, err)
 
 		assert.Equal(t, `[default]
@@ -517,11 +516,7 @@ func TestConfigureSwitchProfileHelp(t *testing.T) {
 func runConfigureTest(t *testing.T, conditions func(*expect.Console), args ...string) (string, string) {
 	// create a temporal directory where we will check that the
 	// configuration file is deployed (.lacework.toml)
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		fmt.Println(err)
-		t.FailNow()
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	state := runFakeTerminalTestFromDir(t, dir, conditions, args...)
@@ -529,7 +524,7 @@ func runConfigureTest(t *testing.T, conditions func(*expect.Console), args ...st
 	configPath := path.Join(dir, ".lacework.toml")
 	assert.Contains(t, state, "You are all set!", "you are not all set, check configure cmd")
 	assert.FileExists(t, configPath, "the configuration file is missing")
-	laceworkTOML, err := ioutil.ReadFile(configPath)
+	laceworkTOML, err := os.ReadFile(configPath)
 	assert.Nil(t, err)
 	return state, string(laceworkTOML)
 }

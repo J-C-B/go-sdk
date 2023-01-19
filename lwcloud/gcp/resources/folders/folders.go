@@ -37,7 +37,9 @@ type FolderInfo struct {
 	Ancestory   string
 }
 
-func EnumerateFolders(ctx context.Context, clientOptions option.ClientOption, ParentId string, Ancestory string, skipList, allowList map[string]bool) ([]FolderInfo, error) {
+func EnumerateFolders(ctx context.Context,
+	clientOptions option.ClientOption, ParentId string, Ancestory string,
+	skipList, allowList map[string]bool) ([]FolderInfo, error) {
 
 	var (
 		client *resourcemanager.FoldersClient

@@ -4,7 +4,6 @@ package integration
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -95,10 +94,7 @@ func TestGenerationAzureCustomizedOutputLocation(t *testing.T) {
 	var runError error
 
 	// Tempdir for test
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	// Run CLI
@@ -125,7 +121,7 @@ func TestGenerationAzureCustomizedOutputLocation(t *testing.T) {
 	assert.Contains(t, final, "Terraform code saved in")
 
 	// Get result
-	result, _ := ioutil.ReadFile(filepath.FromSlash(fmt.Sprintf("%s/main.tf", dir)))
+	result, _ := os.ReadFile(filepath.FromSlash(fmt.Sprintf("%s/main.tf", dir)))
 
 	// Create the TF directly with lwgenerate and validate same result via CLI
 	buildTf, _ := azure.NewTerraform(true, true, true).Generate()
@@ -369,11 +365,8 @@ func TestGenerationAzureWithExistingTerraform(t *testing.T) {
 	var runError error
 
 	// Tempdir for test
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
-	//defer os.RemoveAll(dir)
+	dir := os.TempDir()
+	defer os.RemoveAll(dir)
 
 	// Create fake main.tf
 	if err := os.WriteFile(filepath.FromSlash(fmt.Sprintf("%s/main.tf", dir)), []byte{}, 0644); err != nil {
@@ -857,7 +850,7 @@ func runGenerateAzureTest(t *testing.T, conditions func(*expect.Console), args .
 	hcl_path := filepath.Join(tfPath, azurePath, "main.tf")
 
 	runFakeTerminalTestFromDir(t, tfPath, conditions, args...)
-	out, err := ioutil.ReadFile(hcl_path)
+	out, err := os.ReadFile(hcl_path)
 	if err != nil {
 		return fmt.Sprintf("main.tf not found: %s", err)
 	}

@@ -20,7 +20,6 @@
 package integration
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -40,10 +39,7 @@ func TestAlertProfileUpdateEditor(t *testing.T) {
 
 // CUSTOM_CUSTOMER_DEMO_GCP
 func TestAlertProfileUpdate(t *testing.T) {
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	runAlertProfileTest(t,

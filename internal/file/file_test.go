@@ -19,7 +19,6 @@
 package file_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path"
 	"testing"
@@ -29,7 +28,7 @@ import (
 )
 
 func TestFileExistsWhenFileActuallyExists(t *testing.T) {
-	f, err := ioutil.TempFile("", "bar")
+	f, err := os.CreateTemp("", "bar")
 	if assert.Nil(t, err) {
 		assert.True(t, file.FileExists(f.Name()))
 		os.Remove(f.Name())
@@ -37,12 +36,9 @@ func TestFileExistsWhenFileActuallyExists(t *testing.T) {
 }
 
 func TestFileExistsWhenFileIsADirectory(t *testing.T) {
-	dir, err := ioutil.TempDir("", "bar")
-
-	if assert.Nil(t, err) {
-		assert.False(t, file.FileExists(dir))
-		os.RemoveAll(dir)
-	}
+	dir := os.TempDir()
+	assert.False(t, file.FileExists(dir))
+	os.RemoveAll(dir)
 }
 
 func TestFileExistsButWeDontHavePermissions(t *testing.T) {
@@ -53,17 +49,15 @@ func TestFileExistsButWeDontHavePermissions(t *testing.T) {
 		return
 	}
 
-	dir, err := ioutil.TempDir("", "root")
+	dir := os.TempDir()
+	defer os.RemoveAll(dir)
 
 	// create a directory that we can't read
 	os.Mkdir(path.Join(dir, "protected"), 0700)
 	os.WriteFile(path.Join(dir, "protected", "bubulubu"), []byte("data"), 0644)
 	os.Chmod(path.Join(dir, "protected"), 0000)
 
-	if assert.Nil(t, err) {
-		assert.False(t, file.FileExists(path.Join(dir, "protected", "bubulubu")))
-		os.RemoveAll(dir)
-	}
+	assert.False(t, file.FileExists(path.Join(dir, "protected", "bubulubu")))
 }
 
 func TestFileExistsWhenFileDoesNotExists(t *testing.T) {

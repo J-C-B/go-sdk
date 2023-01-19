@@ -21,7 +21,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"regexp"
 	"sort"
 	"strings"
@@ -367,7 +367,7 @@ type apiKeyDetails struct {
 
 func loadUIJsonFile(file string) error {
 	cli.Log.Debugw("loading API key JSON file", "path", file)
-	jsonData, err := ioutil.ReadFile(file)
+	jsonData, err := os.ReadFile(file)
 	if err != nil {
 		return err
 	}

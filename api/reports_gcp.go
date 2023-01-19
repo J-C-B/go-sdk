@@ -53,9 +53,13 @@ func NewGcpReportType(report string) (GcpReportType, error) {
 	return NONE_GCP_REPORT, errors.Errorf("no report type found for %s", report)
 }
 
-var gcpReportTypes = map[GcpReportType]string{GCP_HIPAA: "GCP_HIPAA", GCP_CIS: "GCP_CIS", GCP_SOC: "GCP_SOC", GCP_CIS12: "GCP_CIS12",
-	GCP_K8S: "GCP_K8S", GCP_PCI_Rev2: "GCP_PCI_Rev2", GCP_SOC_Rev2: "GCP_SOC_Rev2", GCP_HIPAA_Rev2: "GCP_HIPAA_Rev2", GCP_ISO_27001: "GCP_ISO_27001",
-	GCP_NIST_CSF: "GCP_NIST_CSF", GCP_NIST_800_53_REV4: "GCP_NIST_800_53_REV4", GCP_NIST_800_171_REV2: "GCP_NIST_800_171_REV2", GCP_PCI: "GCP_PCI", GCP_CIS13: "GCP_CIS13"}
+var gcpReportTypes = map[GcpReportType]string{
+	GCP_HIPAA: "GCP_HIPAA", GCP_CIS: "GCP_CIS", GCP_SOC: "GCP_SOC", GCP_CIS12: "GCP_CIS12",
+	GCP_K8S: "GCP_K8S", GCP_PCI_Rev2: "GCP_PCI_Rev2", GCP_SOC_Rev2: "GCP_SOC_Rev2",
+	GCP_HIPAA_Rev2: "GCP_HIPAA_Rev2", GCP_ISO_27001: "GCP_ISO_27001",
+	GCP_NIST_CSF: "GCP_NIST_CSF", GCP_NIST_800_53_REV4: "GCP_NIST_800_53_REV4",
+	GCP_NIST_800_171_REV2: "GCP_NIST_800_171_REV2", GCP_PCI: "GCP_PCI", GCP_CIS13: "GCP_CIS13",
+}
 
 const (
 	NONE_GCP_REPORT GcpReportType = iota
@@ -81,7 +85,8 @@ func (svc *gcpReportsService) Get(reportCfg GcpReportConfig) (response GcpReport
 		return GcpReportResponse{}, errors.New("project id and org id are required")
 	}
 
-	apiPath := fmt.Sprintf(apiV2ReportsSecondaryQuery, reportCfg.OrganizationID, reportCfg.ProjectID, "json", reportCfg.Type.String())
+	apiPath := fmt.Sprintf(apiV2ReportsSecondaryQuery,
+		reportCfg.OrganizationID, reportCfg.ProjectID, "json", reportCfg.Type.String())
 	err = svc.client.RequestDecoder("GET", apiPath, nil, &response)
 	return
 }

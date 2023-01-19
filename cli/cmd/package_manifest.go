@@ -22,7 +22,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"regexp"
@@ -275,7 +274,7 @@ func (c *cliState) IsEsmEnabled() bool {
 
 	if file.FileExists(procUAStatusFile) {
 		c.Log.Debugw("detecting ubuntu ESM support", "file", procUAStatusFile)
-		uaStatusBytes, err := ioutil.ReadFile(procUAStatusFile)
+		uaStatusBytes, err := os.ReadFile(procUAStatusFile)
 		if err != nil {
 			c.Log.Warnw("unable to read UA status file", "error", err)
 			return false

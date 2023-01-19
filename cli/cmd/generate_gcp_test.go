@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -53,10 +52,7 @@ func TestGcpBucketRegionRegex(t *testing.T) {
 
 func TestGcpGenerationCache(t *testing.T) {
 	t.Run("extra state shouldn't be written if empty", func(t *testing.T) {
-		dir, err := ioutil.TempDir("", "lacework-cli-cache")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 		cli.InitCache(dir)
 
@@ -65,10 +61,7 @@ func TestGcpGenerationCache(t *testing.T) {
 		assert.NoFileExists(t, filepath.FromSlash(fmt.Sprintf("%s/cache/standalone/%s", dir, CachedAssetGcpExtraState)))
 	})
 	t.Run("extra state should be written if not empty", func(t *testing.T) {
-		dir, err := ioutil.TempDir("", "lacework-cli-cache")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 		cli.InitCache(dir)
 
@@ -77,10 +70,7 @@ func TestGcpGenerationCache(t *testing.T) {
 		assert.FileExists(t, filepath.FromSlash(fmt.Sprintf("%s/cache/standalone/%s", dir, CachedAssetGcpExtraState)))
 	})
 	t.Run("iac params should not be cached when empty", func(t *testing.T) {
-		dir, err := ioutil.TempDir("", "lacework-cli-cache")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 		cli.InitCache(dir)
 
@@ -89,10 +79,7 @@ func TestGcpGenerationCache(t *testing.T) {
 		assert.NoFileExists(t, filepath.FromSlash(fmt.Sprintf("%s/cache/standalone/%s", dir, CachedGcpAssetIacParams)))
 	})
 	t.Run("iac params should be cached when not empty", func(t *testing.T) {
-		dir, err := ioutil.TempDir("", "lacework-cli-cache")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 		cli.InitCache(dir)
 

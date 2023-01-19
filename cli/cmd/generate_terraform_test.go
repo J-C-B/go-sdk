@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -29,10 +28,7 @@ func TestGenerationTfInstallation(t *testing.T) {
 	t.Run("forced installation should installed expected version", func(t *testing.T) {
 		toggleNonInteractive()
 		defer toggleNonInteractive()
-		dir, err := ioutil.TempDir("", "tf-install-test")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 
 		// Force install
@@ -48,10 +44,7 @@ func TestGenerationTfInstallation(t *testing.T) {
 	t.Run("existing terraform version should be located and used, if version is new enough", func(t *testing.T) {
 		toggleNonInteractive()
 		defer toggleNonInteractive()
-		dir, err := ioutil.TempDir("", "tf-install-test")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 
 		// Install some version that should be detected
@@ -82,10 +75,7 @@ func TestGenerationTfInstallation(t *testing.T) {
 	t.Run("installed version of terraform that is too old gets ephemeral installation", func(t *testing.T) {
 		toggleNonInteractive()
 		defer toggleNonInteractive()
-		dir, err := ioutil.TempDir("", "tf-install-test")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 
 		// Install some version that should be detected
@@ -121,10 +111,7 @@ func TestGenerationTfInstallation(t *testing.T) {
 	t.Run("installed version of terraform that is too old to support version checking gets ephemeral installation", func(t *testing.T) {
 		toggleNonInteractive()
 		defer toggleNonInteractive()
-		dir, err := ioutil.TempDir("", "tf-install-test")
-		if err != nil {
-			panic(err)
-		}
+		dir := os.TempDir()
 		defer os.RemoveAll(dir)
 
 		// Install some version that should be detected

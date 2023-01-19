@@ -4,7 +4,6 @@ package integration
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -298,10 +297,7 @@ func TestGenerationSACredsGcp(t *testing.T) {
 			"client_email": "test_email@lacework.iam.gserviceaccount.com"
 	}`)
 
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	serviceAccountFilePath := filepath.Join(dir, "service_account_creds.json")
@@ -676,10 +672,7 @@ func TestGenerationCustomizedOutputLocationGcp(t *testing.T) {
 	defer os.Setenv("LW_NOCACHE", "")
 	var final string
 
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	runGcpGenerateTest(t,
@@ -705,7 +698,7 @@ func TestGenerationCustomizedOutputLocationGcp(t *testing.T) {
 
 	assertTerraformSaved(t, final)
 
-	result, _ := ioutil.ReadFile(filepath.FromSlash(fmt.Sprintf("%s/main.tf", dir)))
+	result, _ := os.ReadFile(filepath.FromSlash(fmt.Sprintf("%s/main.tf", dir)))
 
 	buildTf, _ := gcp.NewTerraform(true, true,
 		gcp.WithProjectId(projectId),
@@ -784,10 +777,7 @@ func TestGenerationWithExistingTerraformGcp(t *testing.T) {
 	defer os.Setenv("LW_NOCACHE", "")
 
 	// Tempdir for test
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 
 	// Create fake main.tf
@@ -1238,7 +1228,7 @@ func runGcpGenerateTest(t *testing.T, conditions func(*expect.Console), args ...
 	os.Setenv("HOME", tfPath)
 
 	runFakeTerminalTestFromDir(t, tfPath, conditions, args...)
-	out, err := ioutil.ReadFile(filepath.Join(tfPath, gcpPath, "main.tf"))
+	out, err := os.ReadFile(filepath.Join(tfPath, gcpPath, "main.tf"))
 	if err != nil {
 		return fmt.Sprintf("main.tf not found: %s", err)
 	}

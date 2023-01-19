@@ -882,7 +882,12 @@ func writeAwsEksAuditGenerationArgsCache(a *aws_eks_audit.GenerateAwsEksAuditTfC
 }
 
 // entry point for launching a survey to build out the required generation parameters
-func promptAwsEksAuditGenerate(config *aws_eks_audit.GenerateAwsEksAuditTfConfigurationArgs, existingIam *aws_eks_audit.ExistingCrossAccountIamRoleDetails, extraState *AwsEksAuditGenerateCommandExtraState) error {
+func promptAwsEksAuditGenerate(
+	config *aws_eks_audit.GenerateAwsEksAuditTfConfigurationArgs,
+	existingIam *aws_eks_audit.ExistingCrossAccountIamRoleDetails,
+	extraState *AwsEksAuditGenerateCommandExtraState,
+) error {
+
 	// Cache for later use if generation is abandoned and in interactive mode
 	if cli.InteractiveMode() {
 		defer writeAwsEksAuditGenerationArgsCache(config)

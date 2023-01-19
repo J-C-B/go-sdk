@@ -2,3 +2,11 @@ run:
   deadline: 5m
   tests: false
   modules-download-mode: vendor
+
+linters-settings:
+  lll:
+    line-length: 160
+
+linters:
+  enable:
+    - lll

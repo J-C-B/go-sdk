@@ -19,7 +19,7 @@
 package cmd
 
 import (
-	"io/ioutil"
+	"os"
 	"path"
 	"testing"
 	"time"
@@ -29,10 +29,7 @@ import (
 
 func TestCacheGlobal(t *testing.T) {
 	// create a temporal directory for our global cache
-	dir, err := ioutil.TempDir("", "lacework-cli-cache")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	cli.InitCache(dir)
 
 	defer func() {
@@ -42,7 +39,7 @@ func TestCacheGlobal(t *testing.T) {
 	key := "global/file"
 	expected := []byte("data")
 
-	err = cli.Cache.Write(key, expected)
+	err := cli.Cache.Write(key, expected)
 	assert.Nil(t, err)
 	cache, err := cli.Cache.Read(key)
 	assert.Nil(t, err)
@@ -54,10 +51,7 @@ func TestCacheGlobal(t *testing.T) {
 
 func TestCacheGlobalWithLongPath(t *testing.T) {
 	// create a temporal directory for our global cache
-	dir, err := ioutil.TempDir("", "lacework-cli-cache")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	cli.InitCache(dir)
 
 	defer func() {
@@ -67,7 +61,7 @@ func TestCacheGlobalWithLongPath(t *testing.T) {
 	key := "global/path/to/file"
 	expected := []byte("data")
 
-	err = cli.Cache.Write(key, expected)
+	err := cli.Cache.Write(key, expected)
 	assert.Nil(t, err)
 	cache, err := cli.Cache.Read(key)
 	assert.Nil(t, err)
@@ -79,10 +73,7 @@ func TestCacheGlobalWithLongPath(t *testing.T) {
 
 func TestCacheScopedStandalone(t *testing.T) {
 	// create a temporal directory for our global cache
-	dir, err := ioutil.TempDir("", "lacework-cli-cache")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	cli.InitCache(dir)
 
 	// setting up required Lacework CLI config
@@ -100,7 +91,7 @@ func TestCacheScopedStandalone(t *testing.T) {
 	key := "compliance_report"
 	expected := []byte("data")
 
-	err = cli.Cache.Write(key, expected)
+	err := cli.Cache.Write(key, expected)
 	assert.Nil(t, err)
 	cache, err := cli.Cache.Read(key)
 	assert.Nil(t, err)
@@ -112,10 +103,7 @@ func TestCacheScopedStandalone(t *testing.T) {
 
 func TestCacheScopedOrgAccounts(t *testing.T) {
 	// create a temporal directory for our global cache
-	dir, err := ioutil.TempDir("", "lacework-cli-cache")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	cli.InitCache(dir)
 
 	// setting up required Lacework CLI config
@@ -131,7 +119,7 @@ func TestCacheScopedOrgAccounts(t *testing.T) {
 	key := "vuln_assessment"
 	expected := []byte("data")
 
-	err = cli.Cache.Write(key, expected)
+	err := cli.Cache.Write(key, expected)
 	assert.Nil(t, err)
 	cache, err := cli.Cache.Read(key)
 	assert.Nil(t, err)
@@ -143,10 +131,7 @@ func TestCacheScopedOrgAccounts(t *testing.T) {
 
 func TestCacheEndToEnd(t *testing.T) {
 	// create a temporal directory for our global cache
-	dir, err := ioutil.TempDir("", "lacework-cli-cache")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	cli.InitCache(dir)
 
 	defer func() {
@@ -157,7 +142,7 @@ func TestCacheEndToEnd(t *testing.T) {
 	expected := []byte("data")
 
 	// Create
-	err = cli.Cache.Write(key, expected)
+	err := cli.Cache.Write(key, expected)
 	assert.Nil(t, err)
 
 	// Read
@@ -183,10 +168,7 @@ func TestCacheEndToEnd(t *testing.T) {
 
 func TestWriteReadAssetToCache(t *testing.T) {
 	// create a temporal directory for our global cache
-	dir, err := ioutil.TempDir("", "lacework-cli-cache")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	cli.InitCache(dir)
 
 	t.Run("primitive type: string", func(t *testing.T) {

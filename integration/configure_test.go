@@ -20,7 +20,6 @@
 package integration
 
 import (
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -49,11 +48,7 @@ func TestConfigureListHelp(t *testing.T) {
 func TestConfigureCommandNonInteractive(t *testing.T) {
 	// create a temporal directory where we will check that the
 	// configuration file is deployed (.lacework.toml)
-	home, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
-
+	home := os.TempDir()
 	defer os.RemoveAll(home)
 	out, errB, exitcode := LaceworkCLIWithHome(home, "configure",
 		"--noninteractive",
@@ -70,7 +65,7 @@ func TestConfigureCommandNonInteractive(t *testing.T) {
 
 	configPath := path.Join(home, ".lacework.toml")
 	assert.FileExists(t, configPath, "the configuration file is missing")
-	laceworkTOML, err := ioutil.ReadFile(configPath)
+	laceworkTOML, err := os.ReadFile(configPath)
 	if err != nil {
 		panic(err)
 	}
@@ -85,11 +80,7 @@ func TestConfigureCommandNonInteractive(t *testing.T) {
 }
 
 func TestConfigureCommandNonInteractiveFailures(t *testing.T) {
-	home, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
-
+	home := os.TempDir()
 	defer os.RemoveAll(home)
 
 	tests := []struct {
@@ -128,7 +119,7 @@ func TestConfigureCommandNonInteractiveFailures(t *testing.T) {
 
 func createJSONFileLikeWebUI(content string) string {
 	contentBytes := []byte(content)
-	tmpfile, err := ioutil.TempFile("", "json_file")
+	tmpfile, err := os.CreateTemp("", "json_file")
 	if err != nil {
 		panic(err)
 	}
@@ -140,11 +131,7 @@ func createJSONFileLikeWebUI(content string) string {
 }
 
 func createTOMLConfig() string {
-	dir, err := ioutil.TempDir("", "lacework-toml")
-	if err != nil {
-		panic(err)
-	}
-
+	home := os.TempDir()
 	configFile := filepath.Join(dir, ".lacework.toml")
 	c := []byte(`[default]
 account = 'test.account'
@@ -175,7 +162,7 @@ api_key = 'V2CONFIG_KEY'
 api_secret = '_secret'
 subaccount = 'sub-account'
 `)
-	err = ioutil.WriteFile(configFile, c, 0644)
+	err = os.WriteFile(configFile, c, 0644)
 	if err != nil {
 		panic(err)
 	}

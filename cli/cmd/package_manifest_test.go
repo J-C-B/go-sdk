@@ -20,7 +20,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -199,7 +198,7 @@ func TestIsEsmEnabledWhenIsNotEnabled(t *testing.T) {
 }
 
 func TestIsEsmEnabledWhenIsActuallyEnabled(t *testing.T) {
-	file, err := ioutil.TempFile("", "ubuntu-advantage-status-json")
+	file, err := os.CreateTemp("", "ubuntu-advantage-status-json")
 	assert.Nil(t, err)
 	_, err = file.WriteString(mockUbuntuUAStatusFile)
 	assert.Nil(t, err)
@@ -216,7 +215,7 @@ func TestIsEsmEnabledWhenIsActuallyEnabled(t *testing.T) {
 }
 
 func TestParseOsRelease(t *testing.T) {
-	file, err := ioutil.TempFile("", "os-release")
+	file, err := os.CreateTemp("", "os-release")
 	assert.Nil(t, err)
 	_, err = file.WriteString(mockUbuntuOSReleaseFile)
 	assert.Nil(t, err)
@@ -230,7 +229,7 @@ func TestParseOsRelease(t *testing.T) {
 }
 
 func TestParseSysRelease(t *testing.T) {
-	file, err := ioutil.TempFile("", "system-release")
+	file, err := os.CreateTemp("", "system-release")
 	assert.Nil(t, err)
 	_, err = file.WriteString(mockCentosSystemFile)
 	assert.Nil(t, err)

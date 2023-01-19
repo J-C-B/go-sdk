@@ -45,7 +45,11 @@ type AWSRunner struct {
 	ImageName        string
 }
 
-func NewAWSRunner(amiImageId, userFromCLIArg, host, region, availabilityZone, instanceID string, filterSSH bool, callback ssh.HostKeyCallback) (*AWSRunner, error) {
+func NewAWSRunner(
+	amiImageId, userFromCLIArg, host, region, availabilityZone, instanceID string,
+	filterSSH bool, callback ssh.HostKeyCallback,
+) (*AWSRunner, error) {
+
 	// Look up the AMI name of the runner
 	imageName, err := getAMIName(amiImageId, region)
 	if err != nil {

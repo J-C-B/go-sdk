@@ -23,7 +23,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -78,10 +77,7 @@ var (
 //	    "EXITCODE is not the expected one")
 //	}
 func LaceworkCLI(args ...string) (bytes.Buffer, bytes.Buffer, int) {
-	dir, err := ioutil.TempDir("", "lacework-cli")
-	if err != nil {
-		panic(err)
-	}
+	dir := os.TempDir()
 	defer os.RemoveAll(dir)
 	return runLaceworkCLI(dir, args...)
 }
@@ -173,7 +169,7 @@ func runLaceworkCLIFromCmd(cmd *exec.Cmd) (int, error) {
 }
 
 func Version(t *testing.T) string {
-	repoVersion, err := ioutil.ReadFile("../VERSION")
+	repoVersion, err := os.ReadFile("../VERSION")
 	if err != nil {
 		t.Logf("Unable to read VERSION file, error: '%s'", err.Error())
 		t.Fail()
@@ -201,11 +197,7 @@ func createTOMLConfigFromCIvars() string {
 		log.Fatal(missingCIEnvironmentVariables())
 	}
 
-	dir, err := ioutil.TempDir("", "lacework-toml")
-	if err != nil {
-		panic(err)
-	}
-
+	dir := os.TempDir()
 	configFile := filepath.Join(dir, ".lacework.toml")
 	c := []byte(`[default]
 account = '` + os.Getenv("CI_ACCOUNT") + `'
@@ -214,7 +206,7 @@ api_key = '` + os.Getenv("CI_API_KEY") + `'
 api_secret = '` + os.Getenv("CI_API_SECRET") + `'
 version = 2
 `)
-	err = ioutil.WriteFile(configFile, c, 0644)
+	err := os.WriteFile(configFile, c, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -234,11 +226,7 @@ ERROR
 }
 
 func createDummyTOMLConfig() string {
-	dir, err := ioutil.TempDir("", "lacework-toml")
-	if err != nil {
-		panic(err)
-	}
-
+	dir := os.TempDir()
 	configFile := filepath.Join(dir, ".lacework.toml")
 	c := []byte(`[default]
 account = 'dummy'
@@ -271,7 +259,7 @@ api_key = 'DEVDEV_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890AAABBBCCC000'
 api_secret = '_11111111111111111111111111111111'
 version = 2
 `)
-	err = ioutil.WriteFile(configFile, c, 0644)
+	err = os.WriteFile(configFile, c, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -317,7 +305,7 @@ func laceworkIntegrationTestClient() (*api.Client, error) {
 
 func createTemporaryFile(name, content string) (*os.File, error) {
 	// get temp file
-	file, err := ioutil.TempFile("", name)
+	file, err := os.CreateTemp("", name)
 	if err != nil {
 		return nil, err
 	}
