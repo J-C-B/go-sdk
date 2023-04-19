@@ -191,6 +191,10 @@ func showContainerAssessmentsWithSha256(sha string) error {
 func outputContainerVulnerabilityAssessment(assessment api.VulnerabilitiesContainersResponse) error {
 	if vulCmdState.Cve != "" {
 		assessment.FilterSingleVulnIDData(vulCmdState.Cve)
+		if len(assessment.Data) == 0 {
+			cli.OutputHuman("unable to find results for cve '%s'\n", vulCmdState.Cve)
+			return nil
+		}
 	}
 
 	var vulnerabilites []api.VulnerabilityContainer
@@ -297,6 +301,11 @@ func buildVulnerabilitySingleCveReportTable(details vulnerabilityDetailsReport) 
 				{"CVE ID", CveData.Name},
 				{"SEVERITY", CveData.Severity},
 				{"PACKAGE", CveData.PackageName},
+				{"NAMESPACE", CveData.Namespace},
+				{"FEED", CveData.Feed},
+				{"SRC", CveData.Src},
+				{"START TIME", CveData.StartTime},
+				{"VERSION FORMAT", CveData.VersionFormat},
 				{"CURRENT VERSION", CveData.CurrentVersion},
 				{"FIX VERSION", CveData.FixVersion},
 				{"STATUS", CveData.Status},
@@ -545,6 +554,11 @@ func filterVulnerabilityContainer(image []api.VulnerabilityContainer) filteredIm
 				PackageName:    i.FeatureKey.Name,
 				CurrentVersion: i.FeatureKey.Version,
 				FixVersion:     i.FixInfo.FixedVersion,
+				Namespace:      i.FeatureKey.Namespace,
+				Feed:           i.FeatureProps.Feed,
+				StartTime:      i.StartTime.Format(time.RFC3339),
+				VersionFormat:  i.FeatureProps.VersionFormat,
+				Src:            i.FeatureProps.Src,
 				// Todo(v2): CVSSv3Score is missing from V2
 				CVSSv3Score: 0,
 				// Todo(v2): CVSSv2Score is missing from V2
@@ -694,4 +708,9 @@ type vulnTable struct {
 	CVSSv2Score    float64
 	CVSSv3Score    float64
 	Status         string
+	Namespace      string
+	Feed           string
+	Src            string
+	StartTime      string
+	VersionFormat  string
 }
