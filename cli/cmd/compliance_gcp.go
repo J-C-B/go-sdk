@@ -126,9 +126,6 @@ Then, select one GUID from an integration and visualize its details using the co
 
 			if len(args) > 2 {
 				compCmdState.RecommendationID = args[2]
-				if !validRecommendationID(compCmdState.RecommendationID) {
-					return errors.Errorf("\n'%s' is not a valid recommendation id\n", compCmdState.RecommendationID)
-				}
 			}
 
 			// ensure we cannot have both --type and --report_name flags
@@ -477,6 +474,33 @@ The output from status with the --json flag can be used in the body of PATCH api
 			return nil
 		},
 	}
+
+	// complianceGcpScanCmd represents the inventory scan inside the gcp command
+	complianceGcpScanCmd = &cobra.Command{
+		Use:   "scan",
+		Short: "Scan triggers a new resource inventory scan",
+		Long:  `Scan triggers a new resource inventory scan.`,
+		Args:  cobra.NoArgs,
+		RunE: func(_ *cobra.Command, args []string) error {
+			cli.StartProgress("Triggering Gcp inventory scan")
+			response, err := cli.LwApi.V2.Inventory.Scan(api.GcpInventoryType)
+			cli.StopProgress()
+
+			if err != nil {
+				return err
+			}
+
+			if cli.JSONOutput() {
+				return cli.OutputJSON(response)
+			}
+
+			cli.OutputHuman(renderSimpleTable([]string{}, [][]string{
+				{"STATUS", response.Data.Status},
+				{"DETAILS", response.Data.Details},
+			}))
+			return nil
+		},
+	}
 )
 
 func init() {
@@ -484,6 +508,7 @@ func init() {
 	complianceGcpCmd.AddCommand(complianceGcpListCmd)
 	complianceGcpCmd.AddCommand(complianceGcpListProjCmd)
 	complianceGcpCmd.AddCommand(complianceGcpGetReportCmd)
+	complianceGcpCmd.AddCommand(complianceGcpScanCmd)
 
 	// Experimental Commands
 	complianceGcpCmd.AddCommand(complianceGcpReportStatusCmd)

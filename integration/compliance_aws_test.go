@@ -164,7 +164,7 @@ func TestComplianceAwsGetAllReportType(t *testing.T) {
 
 func TestComplianceAwsGetReportRecommendationID(t *testing.T) {
 	account := os.Getenv("LW_INT_TEST_AWS_ACC")
-	out, err, exitcode := LaceworkCLIWithTOMLConfig("compliance", "aws", "get-report", account, "AWS_CIS_2_5")
+	out, err, exitcode := LaceworkCLIWithTOMLConfig("compliance", "aws", "get-report", account, "2.1.2")
 
 	assert.Empty(t, err.String(), "STDERR should be empty")
 	assert.Equal(t, 0, exitcode, "EXITCODE is not the expected one")
@@ -184,6 +184,14 @@ func TestComplianceAwsGetReportRecommendationID(t *testing.T) {
 		"STDOUT table headers changed, please check")
 }
 
+func TestComplianceAwsGetReportRecommendationIDNotFound(t *testing.T) {
+	account := os.Getenv("LW_INT_TEST_AWS_ACC")
+	_, err, exitcode := LaceworkCLIWithTOMLConfig("compliance", "aws", "get-report", account, "rec-not-found")
+	assert.Equal(t, 1, exitcode, "EXITCODE is not the expected one")
+	assert.Contains(t, err.String(), "recommendation id 'rec-not-found' not found.",
+		"STDERR changed?, please check")
+}
+
 func TestComplianceAwsSearchEmpty(t *testing.T) {
 	out, err, exitcode := LaceworkCLIWithTOMLConfig(
 		"compliance", "aws", "search", "example",
@@ -191,6 +199,17 @@ func TestComplianceAwsSearchEmpty(t *testing.T) {
 	assert.Empty(t, err.String(), "STDERR should be empty")
 	assert.Equal(t, 0, exitcode, "EXITCODE is not the expected one")
 	assert.Contains(t, out.String(), "Resource 'example' not found.", "STDOUT changed, please check")
+}
+
+func TestComplianceAwsScan(t *testing.T) {
+	out, err, exitcode := LaceworkCLIWithTOMLConfig(
+		"compliance", "aws", "scan",
+	)
+
+	assert.Empty(t, err.String(), "STDERR should be empty")
+	assert.Equal(t, 0, exitcode, "EXITCODE is not the expected one")
+	assert.Contains(t, out.String(), "STATUS")
+	assert.Contains(t, out.String(), "DETAILS")
 }
 
 func _TestComplianceAwsSearch(t *testing.T) {

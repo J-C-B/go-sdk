@@ -16,6 +16,7 @@ Usage:
 Available Commands:
   get-report     Get the latest AWS compliance report
   list-accounts  List all AWS accounts configured
+  scan           Scan triggers a new resource inventory scan
   search         Search for all known violations of a given resource arn
 
 Flags:
